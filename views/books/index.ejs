@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+
+<div class="page-header-block">
+    <h2>Digital Books Catalog</h2>
+    <form action="/books" method="get" class="search-filter-bar">
+        <div class="search-input-wrapper">
+            <input type="text" name="search" value="<%= search %>" placeholder="Search title, author, isbn...">
+        </div>
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+</div>
+
+<div class="items-grid">
+    <% if (books.length === 0) { %>
+        <p style="color: var(--text-muted);">No matching books located in the library ledger index.</p>
+    <% } else { %>
+        <% books.forEach(book => { %>
+            <div class="book-card">
+                <div>
+                    <h3 class="book-title"><%= book.title %></h3>
+                    <p class="book-meta-author"><strong>ISBN:</strong> <span class="isbn-tag"><%= book.isbn %></span></p>
+                    <p class="book-meta-author"><strong>Author:</strong> <%= book.author_name %></p>
+                    <p class="book-meta-author"><strong>Year:</strong> <%= book.publication_year %></p>
+                    <p class="book-description"><%= book.description %></p>
+                </div>
+                
+                <div class="book-footer-info">
+                    <span class="badge badge-<%= book.status === 'available' ? 'available' : book.status === 'borrowed' ? 'checked-out' : 'maintenance' %>">
+                        <%= book.status.toUpperCase() %>
+                    </span>
+                    
+                    <div class="row-actions">
+                        <% if (locals.currentUser && currentUser.role === 'user') { %>
+                            <% if (book.status === 'available') { %>
+                                <form action="/borrow/borrow" method="post">
+                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                    <input type="hidden" name="book_id" value="<%= book.id %>">
+                                    <button type="submit" class="btn btn-primary" style="padding: 0.4rem 1rem;">Borrow Book</button>
+                                </form>
+                            <% } else { %>
+                                <button class="btn btn-secondary" disabled style="cursor: not-allowed; opacity: 0.6;">Unavailable</button>
+                            <% } %>
+                        <% } else if (locals.currentUser && currentUser.role === 'admin') { %>
+                            <a href="/books/edit/<%= book.id %>" class="btn btn-secondary" style="padding: 0.4rem 1rem;">Modify (Admin Mode)</a>
+                        <% } else { %>
+                            <a href="/auth/login" style="font-size: 0.875rem;">Sign in to check out</a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        <% }) %>
+    <% } %>
+</div>

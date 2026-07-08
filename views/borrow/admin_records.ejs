@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+<h2>System Transactional Audit Logs</h2>
+
+<table style="width:100%; border-collapse: collapse; text-align:left; margin-top:1.5rem; background:#1e293b; border:1px solid #334155;">
+    <thead>
+        <tr style="background:#273348; color:white; border-bottom:2px solid #334155;">
+            <th style="padding:1rem;">Borrower Member</th>
+            <th style="padding:1rem;">Book Title</th>
+            <th style="padding:1rem;">Checkout Date</th>
+            <th style="padding:1rem;">Return Execution Date</th>
+            <th style="padding:1rem;">Status</th>
+            <th style="padding:1rem;">Force Override</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (records.length === 0) { %>
+            <tr>
+                <td colspan="6" style="padding:1.5rem; text-align:center; color:#94a3b8;">No transactional records found inside the log stream database.</td>
+            </tr>
+        <% } else { %>
+            <% records.forEach(rec => { %>
+                <tr style="border-bottom:1px solid #334155;">
+                    <td style="padding:1rem;"><strong><%= rec.user_username %></strong></td>
+                    <td style="padding:1rem;"><%= rec.book_title %></td>
+                    <td style="padding:1rem;"><%= new Date(rec.borrow_date).toLocaleDateString() %></td>
+                    <td style="padding:1rem;"><%= rec.return_date ? new Date(rec.return_date).toLocaleDateString() : '—' %></td>
+                    <td style="padding:1rem;"><%= rec.status.toUpperCase() %></td>
+                    <td style="padding:1rem;">
+                        <% if (rec.status === 'borrowed') { %>
+                            <form action="/borrow/return/<%= rec.id %>" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" style="background:#f87171; color:white; border:none; padding:0.3rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.85rem;">Force Return</button>
+                            </form>
+                        <% } else { %>
+                            <span style="color:#22c55e;">Settled</span>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>

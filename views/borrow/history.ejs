@@ -1,0 +1,48 @@
+<%- include('../partials/header') %>
+<h2>My Checkout Logs</h2>
+
+<table style="width:100%; border-collapse: collapse; text-align:left; margin-top:1.5rem; background:#1e293b; border:1px solid #334155;">
+    <thead>
+        <tr style="background:#273348; color:white; border-bottom:2px solid #334155;">
+            <th style="padding:1rem;">Book Title</th>
+            <th style="padding:1rem;">ISBN</th>
+            <th style="padding:1rem;">Check-out Date</th>
+            <th style="padding:1rem;">Return Date</th>
+            <th style="padding:1rem;">Status</th>
+            <th style="padding:1rem;">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% if (records.length === 0) { %>
+            <tr>
+                <td colspan="6" style="padding:1.5rem; text-align:center; color:#94a3b8;">You currently have no historical checkout logging blocks.</td>
+            </tr>
+        <% } else { %>
+            <% records.forEach(rec => { %>
+                <tr style="border-bottom:1px solid #334155;">
+                    <td style="padding:1rem;"><%= rec.book_title %></td>
+                    <td style="padding:1rem;"><%= rec.book_isbn %></td>
+                    <td style="padding:1rem;"><%= new Date(rec.borrow_date).toLocaleDateString() %></td>
+                    <td style="padding:1rem;"><%= rec.return_date ? new Date(rec.return_date).toLocaleDateString() : '—' %></td>
+                    <td style="padding:1rem;">
+                        <% if (rec.status === 'borrowed') { %>
+                            <span style="color: #fb923c;"><%= rec.status.toUpperCase() %></span>
+                        <% } else { %>
+                            <span style="color: #22c55e;"><%= rec.status.toUpperCase() %></span>
+                        <% } %>
+                    </td>
+                    <td style="padding:1rem;">
+                        <% if (rec.status === 'borrowed') { %>
+                            <form action="/borrow/return/<%= rec.id %>" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" style="background:#475569; color:white; border:none; padding:0.3rem 0.6rem; border-radius:4px; cursor:pointer; font-size:0.85rem;">Return Book</button>
+                            </form>
+                        <% } else { %>
+                            <span style="color:#22c55e; font-size:0.9rem;">Returned</span>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+        <% } %>
+    </tbody>
+</table>

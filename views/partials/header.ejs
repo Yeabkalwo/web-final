@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Library Control Panel</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="nav-wrapper">
+            <div class="brand-logo">
+                <span></span> DigitalLibrary
+            </div>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="/books" class="nav-link">Books Catalog</a></li>
+                    <% if (locals.currentUser) { %>
+                        <li><a href="/authors" class="nav-link">Author Index</a></li>
+                        <% if (currentUser.role === 'admin') { %>
+                            <li><a href="/books/admin-dashboard" class="nav-link" style="color:#facc15;">Admin Panel</a></li>
+                            <li><a href="/borrow/all-records" class="nav-link">System Audit Logs</a></li>
+                        <% } else { %>
+                            <li><a href="/borrow/history" class="nav-link">My Borrows</a></li>
+                        <% } %>
+                        <li><span class="nav-link">Hello, <strong><%= currentUser.username %> (<%= currentUser.role %>)</strong></span></li>
+                        <li><a href="/auth/logout" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">Logout</a></li>
+                    <% } else { %>
+                        <li><a href="/auth/login" class="nav-link">Sign In</a></li>
+                        <li><a href="/auth/register" class="nav-link nav-auth-btn">Register</a></li>
+                    <% } %>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main class="app-container" style="padding:2rem; max-width:1200px; margin:0 auto;">
+        <% if (locals.messages && messages.success && messages.success.length > 0) { %>
+            <div class="alert alert-success" style="background:#22c55e; color:white; padding:1rem; margin-bottom:1.5rem; border-radius:6px;">✓ <%= messages.success %></div>
+        <% } %>
+        <% if (locals.messages && messages.error && messages.error.length > 0) { %>
+            <div class="alert alert-error" style="background:#f87171; color:white; padding:1rem; margin-bottom:1.5rem; border-radius:6px;">✕ <%= messages.error %></div>
+        <% } %>

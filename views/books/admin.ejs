@@ -1,0 +1,46 @@
+<%- include('../partials/header') %>
+
+<div class="page-header-block">
+    <h2>Admin Library Inventory Control</h2>
+    <div class="row-actions">
+        <a href="/books/create" class="btn btn-primary" style="background-color: var(--success);">+ Add New Book</a>
+        <a href="/authors/create" class="btn btn-primary">+ Add New Author</a>
+    </div>
+</div>
+
+<div class="table-responsive-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>ISBN</th>
+                <th>Author</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% books.forEach(book => { %>
+                <tr>
+                    <td style="font-weight: 600;"><%= book.title %></td>
+                    <td><span class="isbn-tag"><%= book.isbn %></span></td>
+                    <td><%= book.author_name %></td>
+                    <td>
+                        <span class="badge badge-<%= book.status === 'available' ? 'available' : book.status === 'borrowed' ? 'checked-out' : 'maintenance' %>">
+                            <%= book.status %>
+                        </span>
+                    </td>
+                    <td>
+                        <div class="row-actions">
+                            <a href="/books/edit/<%= book.id %>" class="btn btn-secondary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Edit</a>
+                            <form action="/books/delete/<%= book.id %>" method="post" onsubmit="return confirm('Completely remove this structural item entry node?');">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <button type="submit" class="btn btn-danger" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>

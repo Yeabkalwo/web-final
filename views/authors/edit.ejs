@@ -1,0 +1,25 @@
+<%- include('../partials/header') %>
+<div style="max-width: 600px; margin: 2rem auto; background:#1e293b; padding:2rem; border-radius:8px; border:1px solid #334155;">
+    <h2>Modify Author Node: <%= author.name %></h2>
+    <form action="/authors/edit/<%= author.id %>" method="post" style="margin-top:1.5rem;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Author Full Name</label>
+            <input type="text" name="name" value="<%= author.name %>" required style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Nationality</label>
+            <input type="text" name="nationality" value="<%= author.nationality %>" style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Birth Year</label>
+            <input type="number" name="birth_year" value="<%= author.birth_year %>" style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+        </div>
+        <div style="margin-bottom:1.5rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Biography</label>
+            <textarea name="biography" rows="4" style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;"><%= author.biography %></textarea>
+        </div>
+        <button type="submit" style="background:#2563eb; color:white; border:none; padding:0.5rem 1rem; border-radius:4px; cursor:pointer;">Update Author</button>
+        <a href="/authors" style="color:#94a3b8; margin-left:1rem; text-decoration:none; font-size:0.9rem;">Cancel</a>
+    </form>
+</div>

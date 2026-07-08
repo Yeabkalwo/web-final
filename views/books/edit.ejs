@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+<div style="max-width: 600px; margin: 2rem auto; background:#1e293b; padding:2rem; border-radius:8px; border:1px solid #334155;">
+    <h2>Edit Book Node: <%= book.title %></h2>
+    <form action="/books/edit/<%= book.id %>" method="post" style="margin-top:1.5rem;">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Book Title</label>
+            <input type="text" name="title" value="<%= book.title %>" required style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">ISBN Code</label>
+            <input type="text" name="isbn" value="<%= book.isbn %>" required style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Author Assignment</label>
+            <select name="author_id" required style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+                <% authors.forEach(author => { %>
+                    <option value="<%= author.id %>" <%= author.id === book.author_id ? 'selected' : '' %>><%= author.name %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Publication Year</label>
+            <input type="number" name="publication_year" value="<%= book.publication_year %>" style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Status</label>
+            <select name="status" style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;">
+                <option value="available" <%= book.status === 'available' ? 'selected' : '' %>>Available</option>
+                <option value="borrowed" <%= book.status === 'borrowed' ? 'selected' : '' %>>Borrowed</option>
+                <option value="reserved" <%= book.status === 'reserved' ? 'selected' : '' %>>Reserved</option>
+            </select>
+        </div>
+        <div style="margin-bottom:1.5rem;">
+            <label style="display:block; margin-bottom:0.3rem;">Description</label>
+            <textarea name="description" rows="4" style="width:100%; padding:0.5rem; background:#0f172a; border:1px solid #334155; color:white; border-radius:4px;"><%= book.description %></textarea>
+        </div>
+        <button type="submit" style="background:#2563eb; color:white; border:none; padding:0.5rem 1rem; border-radius:4px; cursor:pointer;">Update Records</button>
+        <a href="/books/admin-dashboard" style="color:#94a3b8; margin-left:1rem; text-decoration:none; font-size:0.9rem;">Cancel</a>
+    </form>
+</div>
